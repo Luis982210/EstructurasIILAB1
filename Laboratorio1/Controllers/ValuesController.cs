@@ -10,36 +10,46 @@ namespace Laboratorio1.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+
+        private readonly IGaseosasM gaseosasM;
+        public ValuesController(IGaseosasM gaseosas_M)
+        {
+            gaseosasM = gaseosas_M;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        public ActionResult<List<Gaseosas>> Get() => gaseosasM.Get();
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<Gaseosas> GetID([FromBody]string nombre)
         {
-            return "value";
+            return gaseosasM.GetID(nombre);
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<string> Create([FromBody] string nombre, [FromBody] string sabor, [FromBody] string volumen, [FromBody] double precio, [FromBody] string casa)
         {
+            if (gaseosasM.verificar(nombre))
+            {
+                Gaseosas nuevaGaseosa = new Gaseosas();
+                nuevaGaseosa.Nombre = nombre;
+                nuevaGaseosa.Sabor = sabor;
+                nuevaGaseosa.Volumen = volumen;
+                nuevaGaseosa.Precio = precio;
+                nuevaGaseosa.CasaP = casa;
+                gaseosasM.crearGaseosa(nuevaGaseosa);
+                return nuevaGaseosa.Nombre + "se ha agregado";
+            }
+            else
+            {
+                return nombre + " ya existe, inserte un nuevo objeto";
+            }
+            
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

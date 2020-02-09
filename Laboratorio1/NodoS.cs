@@ -10,14 +10,14 @@ namespace Laboratorio1
 	public class Nodo
 	{
 		public List<Nodo> Hijos { get; private set; }//Basicamente los hijos
-		public List<string> Valores { get; private set; }//Las llaves del arbol 
+		public List<Gaseosas> Valores { get; private set; }//Las llaves del arbol 
 		public Nodo Padre { get; set; }
 
 
-		public Nodo(string key)
+		public Nodo(Gaseosas gaseosa)
 		{
-			Valores = new List<string>();
-			Valores.Add(key);
+			Valores = new List<Gaseosas>();
+			Valores.Add(gaseosa);
 			Hijos = new List<Nodo>();
 
 		}
@@ -27,7 +27,7 @@ namespace Laboratorio1
 		{
 			for (int i = 0; i < Valores.Count; i++)
 			{
-				if (Valores[i].CompareTo(k) == 0)
+				if (Valores[i].Nombre.CompareTo(k) == 0)
 				{
 					return 1;
 				}
@@ -38,7 +38,7 @@ namespace Laboratorio1
 		{
 			for (int x = 0; x < Hijos.Count; x++)
 			{
-				if (Hijos[x].Valores[0].CompareTo(Hijo.Valores[0]) > 0)
+				if (Hijos[x].Valores[0].Nombre.CompareTo(Hijo.Valores[0].Nombre) > 0)
 				{
 					Hijos.Insert(x, Hijo);
 					return;
@@ -84,18 +84,18 @@ namespace Laboratorio1
 				string left = " ";
 				for (int x = 0; x < Valores.Count; x++)
 				{
-					if (left.CompareTo(k) < 0 && k.CompareTo(Valores[x]) < 0)
+					if (left.CompareTo(k) < 0 && k.CompareTo(Valores[x].Nombre) < 0)
 					{
 						return x;
 					}
 					else
 					{
-						left = Valores[x];
+						left = Valores[x].Nombre;
 					}
 				}
 
 
-				if (k.CompareTo(Valores[Valores.Count - 1]) > 0)
+				if (k.CompareTo(Valores[Valores.Count - 1].Nombre) > 0)
 				{
 					return Valores.Count;
 				}
@@ -122,7 +122,7 @@ namespace Laboratorio1
 
 			if (totalValores > 3)
 			{
-				throw new InvalidOperationException("Total Valores of all nodes exceeded 3");
+				throw new InvalidOperationException("Existen más de 3 valores");
 			}
 
 
@@ -130,7 +130,7 @@ namespace Laboratorio1
 
 			if (totalHijos > 4)
 			{
-				throw new InvalidOperationException("Total Hijos of all nodes exceeded 4");
+				throw new InvalidOperationException("Existen más de 4 valores");
 			}
 
 
@@ -138,7 +138,7 @@ namespace Laboratorio1
 
 			for (int x = 0; x < n1.Valores.Count; x++)
 			{
-				string k = n1.Valores[x];
+                Gaseosas k = n1.Valores[x];
 				this.Push(k);
 			}
 
@@ -211,17 +211,17 @@ namespace Laboratorio1
 		}
 
 
-		public string Pop(int position)
+		public Gaseosas Pop(int position)
 		{
 			if (Valores.Count == 1)
 			{
-				throw new InvalidOperationException("Cannot pop value from a 1 key node");
+				throw new InvalidOperationException("Esta accion no se puede generar con un solo valor en el nodo");
 			}
 
 
 			if (position < Valores.Count)
 			{
-				string k = Valores[position];
+				Gaseosas k = Valores[position];
 				Valores.RemoveAt(position);
 
 
@@ -233,7 +233,7 @@ namespace Laboratorio1
 		}
 
 
-		public void Push(string k)
+		public void Push(Gaseosas k)
 		{
 			if (Valores.Count == 3)
 			{
@@ -250,19 +250,21 @@ namespace Laboratorio1
 				string left = " ";
 				for (int x = 0; x < Valores.Count; x++)
 				{
-					if (left.CompareTo(k) < 0 && k.CompareTo(Valores[x]) < 0)
+					if (left.CompareTo(k) < 0 && k.Nombre.CompareTo(Valores[x]) < 0)
 					{
 						Valores.Insert(x, k);
 						return;
 					}
 					else
 					{
-						left = Valores[x];
+						left = Valores[x].Nombre;
 					}
 				}
 				Valores.Add(k);
 			}
 		}
+
+
 		public Nodo Traverse(string k)
 		{
 			int pos = EncontrarPosicionHijo(k);
@@ -277,11 +279,5 @@ namespace Laboratorio1
 				return null;
 			}
 		}
-
-
 	}
-
-
-
-
 }
